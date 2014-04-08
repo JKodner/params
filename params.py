@@ -35,11 +35,13 @@ class params(object):
 			x = "p%s" % str(max_key)
 		self.__dict__[x] = y
 	def __eq__(self, x):
+		"""obj.__eq__(x) <==> obj==x"""
 		self_val = tuple(self.__dict__.values())
 		if isinstance(x, params):
 			x = tuple(x.__dict__.values())
 		return self_val == x
 	def __len__(self):
+		"""obj.__len__() <==> len(obj)"""
 		return len(self.__dict__.values())
 	def call(self, func):
 		"""Calls a function, with the function's parameters being the object's __dict__ values."""
