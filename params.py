@@ -34,6 +34,13 @@ class params(object):
 		if int(x[1:]) != max_key:
 			x = "p%s" % str(max_key)
 		self.__dict__[x] = y
+	def __eq__(self, x):
+		self_val = tuple(self.__dict__.values())
+		if isinstance(x, params):
+			x = tuple(x.__dict__.values())
+		return self_val == x
+	def __len__(self):
+		return len(self.__dict__.values())
 	def call(self, func):
 		"""Calls a function, with the function's parameters being the object's __dict__ values."""
 		args = tuple(self.__dict__.values())
