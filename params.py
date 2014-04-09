@@ -4,20 +4,25 @@ class params(object):
 	This class is a collection of parameters that can be reused for any function. Any type
 	can be inputted.
 
-	The parameters are the self.__dict__'s, values, and the keys are represented a strings
-	formatted as 'p#' with '#' being the position the value is being inputted."""
+	The parameters inputted are part of self.__dict__'s values. Their keys in the dictionary
+	are the positions at which they were they were inputted. For Example:
+
+	obj = params("a", "b", "c")
+	{1: "a", 2: "b", 3: "c"} # obj's __dict__
+
+	Note: self.__dict__'s values are in the order of when they were initialized. Their order
+	is preserved by using collections.OrderedDict."""
 	def __init__(self, *args):
 		"""obj.__init__(...) initializes obj; see help(type(obj)) for signature"""
 		from collections import OrderedDict
 		new_dict = {}
 		for x, y in enumerate(args):
-			name = "p%s" % (x+1)
-			new_dict.update({name: y})
+			new_dict.update({x: y})
 		new_dict = OrderedDict(sorted(new_dict.items()))
 		self.__dict__ = new_dict
 	def __repr__(self):
 		"""obj.__repr__() <==> repr(obj)"""
-		return str(tuple(self.__dict__.values()))
+		return str(dict(self.__dict__))
 	def __getitem__(self, x):
 		"""obj.__getitem__(x) <==> obj[x]"""
 		return self.__dict__[x]
@@ -43,16 +48,46 @@ class params(object):
 	def __len__(self):
 		"""obj.__len__() <==> len(obj)"""
 		return len(self.__dict__.values())
+	def __call__(self, func):
+		"""obj.__call__(func) <==> obj(func) <==> obj.call(func)"""
+		return self.call(func)
 	def call(self, func):
-		"""Calls a function, with the function's parameters being the object's __dict__ values."""
+		"""Calls a function, with the function's params being the object's __dict__ values.
+
+		Note: A shorter approach to doing this is self(func)."""
 		args = tuple(self.__dict__.values())
 		try:
 			return eval("func" + str(args))
 		except Exception, e:
 			raise ValueError("Given Function is not valid for calling: %s" % e)
-	def remove(self, value):
-		"""Removes 'value' from the object's __dict__ values."""
+	def insert(self, pos, value):
+		"""Inserts given 'value' inside self.__dict__, with it's key being the inputted 'pos'
+		value. This function is similar to the insert function belonging to lists.
+
+		Note: 'pos' value must be a positive number, and must be less than self.__dict__'s 
+		length."""
+		items = self.__dict__.values()
+		if not isinstance(pos, int) or pos < 0:
+			raise ValueError("'pos' value is not positive integer.")
+		elif pos >= len(items):
+			raise ValueError("'pos' value is not a position in self.__dict__")
+		items.insert(pos, value)
+		new_dict = {}
+		for x, y in enumerate(items):
+			new_dict.update({x: y})
+		self.__dict__ = new_dict
+	def remove(self, key):
+		"""Removes the inputted self.__dict__'s key."""
+		from collections import OrderedDict
 		dic = self.__dict__
-		for i in dic.keys():
-			if dic[i] == value:
-				del dic[i]
+		key = "p%s" % key
+		if not dic.get(key):
+			raise ValueError("Inputted Key is not valid for removal.")
+		del dic[key]
+		new_dict = {}
+		args = dic.values()
+		for x, y in enumerate(args):
+			name = "p%s" % (x+1)
+			new_dict.update({name: y})
+		new_dict = OrderedDict(sorted(new_dict.items()))
+		self.__dict__ = new_dict
