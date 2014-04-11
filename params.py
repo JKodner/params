@@ -22,7 +22,7 @@ class params(object):
 		self.__dict__ = new_dict
 	def __repr__(self):
 		"""obj.__repr__() <==> repr(obj)"""
-		return str(dict(self.__dict__))
+		return str(tuple(self.__dict__.values()))
 	def __getitem__(self, x):
 		"""obj.__getitem__(x) <==> obj[x]"""
 		return self.__dict__[x]
@@ -51,6 +51,9 @@ class params(object):
 	def __call__(self, func):
 		"""obj.__call__(func) <==> obj(func) <==> obj.call(func)"""
 		return self.call(func)
+	def __iter__(self):
+		for i in self.__dict__.values():
+			yield i
 	def call(self, func):
 		"""Calls a function, with the function's params being the object's __dict__ values.
 
