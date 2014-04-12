@@ -52,8 +52,15 @@ class params(object):
 		"""obj.__call__(func) <==> obj(func) <==> obj.call(func)"""
 		return self.call(func)
 	def __iter__(self):
+		"""obj.__iter__() <==> iter(obj)"""
 		for i in self.__dict__.values():
 			yield i
+	def __contains__(self, item):
+		"""obj.__contains__(x) <==> x in obj"""
+		return item in self.__dict__.values()
+	def __reversed__(self):
+		"""obj.__reversed__() -- return a reverse iterator over the obj's values."""
+		return reversed(self.__dict__.values())
 	def call(self, func):
 		"""Calls a function, with the function's params being the object's __dict__ values.
 
