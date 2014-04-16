@@ -79,7 +79,7 @@ class params(object):
 		items = self.__dict__.values()
 		if not isinstance(pos, int) or pos < 0:
 			raise ValueError("'pos' value is not positive integer.")
-		elif pos >= len(items):
+		elif pos > len(items):
 			raise ValueError("'pos' value is not a position in self.__dict__")
 		items.insert(pos, value)
 		new_dict = {}
@@ -90,14 +90,12 @@ class params(object):
 		"""Removes the inputted self.__dict__'s key."""
 		from collections import OrderedDict
 		dic = self.__dict__
-		key = "p%s" % key
 		if not dic.get(key):
 			raise ValueError("Inputted Key is not valid for removal.")
 		del dic[key]
 		new_dict = {}
 		args = dic.values()
 		for x, y in enumerate(args):
-			name = "p%s" % (x+1)
-			new_dict.update({name: y})
+			new_dict.update({x: y})
 		new_dict = OrderedDict(sorted(new_dict.items()))
 		self.__dict__ = new_dict
