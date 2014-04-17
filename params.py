@@ -8,7 +8,7 @@ class params(object):
 	are the positions at which they were they were inputted. For Example:
 
 	obj = params("a", "b", "c")
-	{1: "a", 2: "b", 3: "c"} # obj's __dict__
+	{0: "a", 1: "b", 2: "c"} # obj's __dict__
 
 	Note: self.__dict__'s values are in the order of when they were initialized. Their order
 	is preserved by using collections.OrderedDict."""
